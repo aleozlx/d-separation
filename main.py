@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os, sys
 import numpy as np
 import unittest, random, itertools
 
@@ -32,46 +31,6 @@ def get_undirected_graph(G):
             H[v].add(u)
     return H
 
-def dfs(G, a = None, returns = 'dfa'):
-    """ DFS traverse the connected component of a in G
-    G: a directed graph
-    a: root vertex """
-    counter = itertools.count(1)
-    visited = np.zeros_like(G).astype(bool)
-    discover = -np.ones_like(G)
-    finish = -np.ones_like(G)
-    ancestor = -np.ones_like(G)
-    results = {'d':discover, 'f':finish, 'a':ancestor}
-    results = tuple([results[i] for i in returns])
-
-    if not G: # empty graph
-        return results
-    
-    if a == None:
-        a = random.choice(range(len(G)))
-
-    stack = [a]
-    discover[a] = next(counter)
-    assert all([0<=u<len(G) for u in stack])
-
-    while stack:
-        u = stack.pop()
-        if u<0: # this is backtrack
-            finish[-u-1] = next(counter)
-            continue
-        else:
-            stack.append(-u-1)
-
-        if not visited[u]:
-            visited[u] = True
-            if G[u]:
-                discovered = np.array([[v, next(counter)] for v in G[u] if not visited[v]])
-                stack.extend(reversed(discovered[:, 0]))
-                discover[discovered[:, 0]] = discovered[:, 1]
-                ancestor[discovered[:, 0]] = u
-
-    return results
-
 def path_generator(G, a, b):
     """ Find all paths from a to b in directed graph G """
     assert all([0<=u<len(G) for u in [a,b]])
@@ -101,7 +60,6 @@ def get_descendants(G, a):
             stack.extend(G[u]-visited)
     return visited-set([a])
 
-
 def dsep(G, a, b, C):
     """ Check whether a and b are d-separated wrt C, which would imply
         P(AB|C) = P(A|C)P(B|C) or P(A|BC) = P(A|C)
@@ -124,14 +82,7 @@ def dsep(G, a, b, C):
     else:
         return True
 
-class UndirectedGraph(unittest.TestCase):
-    def test_undirected_graph(self):
-        for adj1, adj2 in zip(
-                [set([2]), set([2]), set([0, 1, 3, 7]), set([2, 5]), set([5]), set([3, 4, 6]), set([5]), set([2])],
-                get_undirected_graph(G1)):
-            self.assertEqual(adj1, adj2)
-
-class DSeparation(unittest.TestCase):
+class DSeparationTest(unittest.TestCase):
     def test_01(self):
         self.assertTrue(dsep(G1, 0, 3, set([2])))
     
@@ -177,6 +128,4 @@ class DSeparation(unittest.TestCase):
         self.assertTrue(dsep(_G1, 6, 7, set([2])))
 
 if __name__ == '__main__':
-    # for p in path_generator(G1, 0, 6):
-    #     print(p)
     unittest.main()
