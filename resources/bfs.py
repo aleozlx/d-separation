@@ -3,6 +3,9 @@ from collections import deque
 import numpy as np
 import unittest, random, itertools
 
+G1 = [set([2]), set([2]), set([3, 7]), set([5]), set([5]), set([6]), set(), set()]
+G2 = [set([1,2]), set([3]), set([3]), set([4,5]), set([6,7]), set([6,8]), set(), set(), set()]
+
 def bfs(G, a = None):
     """ BFS traverse the connected component of a in G
     G: a directed graph
@@ -34,3 +37,5 @@ def bfs(G, a = None):
                 predecessor[discovered[:, 0]] = u
 
     return results
+
+print(bfs(G1, 0))

@@ -2,6 +2,9 @@
 import numpy as np
 import unittest, random, itertools
 
+G1 = [set([2]), set([2]), set([3, 7]), set([5]), set([5]), set([6]), set(), set()]
+G2 = [set([1,2]), set([3]), set([3]), set([4,5]), set([6,7]), set([6,8]), set(), set(), set()]
+
 def dfs(G, a = None, returns = 'dfp'):
     """ DFS traverse the connected component of a in G
     G: a directed graph
@@ -18,6 +21,7 @@ def dfs(G, a = None, returns = 'dfp'):
         return results
     
     if a == None:
+        print('random')
         a = random.choice(range(len(G)))
 
     stack = [a]
@@ -41,3 +45,5 @@ def dfs(G, a = None, returns = 'dfp'):
                 predecessor[discovered[:, 0]] = u
 
     return results
+
+print(dfs(G1, 0))
